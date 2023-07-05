@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUESS THE COLOR</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="assets/css/custom.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+
+
+    <div>
+        <h2 class="text-white justify-content-center mt-5 text-center p-3 w-50 m-auto ">
+            GUESS THE COLOR GAME
+        </h2>
+    </div>
+
+    <div class="text-center mt-4 my-3">
+        <h4 id="color_code">
+            rgb(255, 0, 0);
+        </h4>
+    </div>
+
+    <div class="container ">
+        <div class="row mt-5 mx-3 justify-content-center">
+            <div class="col-lg-2">
+                <button id="one" class="m-3 rounded w-50 color_box" style="background-color: rgb(255,0,0);"
+                    onclick="verify_color('one')">
+                </button>
+            </div>
+            <div class="col-lg-2">
+                <button id="two" class="m-3 rounded w-50 color_box" style="background-color:  rgb(0,0,255);"
+                    onclick="verify_color('two')">
+
+                </button>
+            </div>
+            <div class="col-lg-2">
+                <button id="three" class="m-3 rounded w-50 color_box" style="background-color:  rgb(0,255,0);"
+                    onclick="verify_color('three')">
+
+                </button>
+            </div>
+            <div class="col-lg-2">
+                <button id="four" class="m-3 rounded w-50 color_box" style="background-color:  rgb(205, 188, 35);"
+                    onclick="verify_color('four')">
+
+                </button>
+            </div>
+            <div class="col-lg-2">
+                <button id="five" class="m-3 rounded w-50 color_box" style="background-color:  rgb(245, 233, 0);"
+                    onclick="verify_color('five')">
+
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <button id="reset" class="button btn btn-primary" onclick="reset_game()">
+            RESET
+        </button>
+    </div>
+
+
+    <div class="text-center my-4">
+        <h4 id="winning_cap">
+
+        </h4>
+    </div>
+
+
+
+
+    <p class="text-center bg-black w-25 m-auto text-white">Session will end in <span class="js-timeout">2:00</span>.</p>
+
+
+
+    <p id="trials" class="mt-4 text-center bg-black w-25 m-auto text-white p-2">
+        Trials left= 3
+    </p>
+
+
+    <script>
+        let color_code_array = [];
+        let winner_color = "";
+        let winner_val = 0;
+        trials_left = 3;
+        function reset_game() {
+            countdown();
+            $('#one').prop('disabled', false)
+            $('#two').prop('disabled', false)
+            $('#three').prop('disabled', false)
+            $('#four').prop('disabled', false)
+            $('#five').prop('disabled', false)
+            trials_left = 3;
+            document.getElementById('winning_cap').innerText = "";
+            color_code_array = [];
+            winner_color = "";
+            winner_val = 0;
+            const randomColor = getRandomColorRGB();
+            let first_box = document.getElementById('one');
+            first_box.style.backgroundColor = randomColor;
+            color_code_array.push(randomColor);
+
+
+            const randomColor2 = getRandomColorRGB();
+            let second_box = document.getElementById('two');
+            second_box.style.backgroundColor = randomColor2;
+            color_code_array.push(randomColor2);
+
+            const randomColor3 = getRandomColorRGB();
+            let third_box = document.getElementById('three');
+            third_box.style.backgroundColor = randomColor3
+            color_code_array.push(randomColor3);
+
+            const randomColor4 = getRandomColorRGB();
+            let fourth_box = document.getElementById('four');
+            fourth_box.style.backgroundColor = randomColor4;
+            color_code_array.push(randomColor4);
+
+            const randomColor5 = getRandomColorRGB();
+            let fifth_box = document.getElementById('five');
+            fifth_box.style.backgroundColor = randomColor5;
+            color_code_array.push(randomColor5);
+
+
+            winner_val = Math.floor(Math.random() * 5);
+
+            winner_color = color_code_array[winner_val];
+
+
+
+            let color_code = document.getElementById('color_code');
+            color_code.innerText = winner_color;
+            document.getElementById('trials').innerText = "Trials left: " + trials_left;
+
+        }
+
+        function getRandomColorRGB() {
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+
+            const rgbColor = `rgb(${r}, ${g}, ${b})`;
+
+            return rgbColor;
+        }
+
+
+
+
+        let count_win = 0;
+
+
+        function verify_color(btn_id) {
+            $('#' + btn_id).prop('disabled', true);
+            if (count_win == 0) {
+                if (document.getElementById(btn_id).style.backgroundColor == 'rgb(255, 0, 0)') {
+                    throw_confetti();
+                    document.getElementById('winning_cap').innerText = "CONGRATS! YOU GUESSED THE RIGHT COLOR!";
+                    count_win = count_win + 1;
+                    setTimeout(reset_timer, 3000);
+
+                }
+                else {
+                    document.getElementById('winning_cap').innerText = "OOPS! TRY AGAIN";
+                    setTimeout(function () {
+                        document.getElementById('winning_cap').innerText = "";
+                    }, 2000);
+                    --trials_left;
+                    document.getElementById('trials').innerText = "Trials left: " + trials_left;
+
+                }
+            }
+            else {
+                if (document.getElementById(btn_id).style.backgroundColor == winner_color) {
+                    throw_confetti();
+                    document.getElementById('winning_cap').innerText = "CONGRATS! YOU GUESSED THE RIGHT COLOR!";
+                 
+                    setTimeout(reset_timer, 3000);
+                }
+                else {
+                    document.getElementById('winning_cap').innerText = "OOPS! TRY AGAIN";
+                    setTimeout(function () {
+                        document.getElementById('winning_cap').innerText = "";
+                    }, 2000);
+                    --trials_left;
+                    document.getElementById('trials').innerText = "Trials left: " + trials_left;
+                }
+            }
+
+            if (trials_left == 0) {
+                alert('GAME OVER');
+                reset_game();
+                reset_timer();
+            }
+        }
+
+
+        var interval;
+
+        function countdown() {
+            clearInterval(interval);
+            interval = setInterval(function () {
+                var timer = $('.js-timeout').html();
+                timer = timer.split(':');
+                var minutes = timer[0];
+                var seconds = timer[1];
+                seconds -= 1;
+                if (minutes < 0) return;
+                else if (seconds < 0 && minutes != 0) {
+                    minutes -= 1;
+                    seconds = 59;
+                }
+                else if (seconds < 10 && length.seconds != 2) seconds = '0' + seconds;
+
+                $('.js-timeout').html(minutes + ':' + seconds);
+
+                if (minutes == 0 && seconds == 0) clearInterval(interval);
+            }, 1000);
+        }
+
+        function reset_timer() {
+            $('.js-timeout').text("2:00");
+            clearInterval(interval);
+            reset_game();
+            countdown();
+        }
+
+        $('#reset').click(function () {
+            $('.js-timeout').text("2:00");
+            clearInterval(interval);
+            reset_game();
+            countdown();
+        });
+
+        $('#js-resetTimer').click(function () {
+            $('.js-timeout').text("2:00");
+            clearInterval(interval);
+            reset_game();
+            countdown();
+        });
+
+        function throw_confetti() {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = '../assets/js/confetti.js';
+            document.getElementsByTagName('body')[0].appendChild(script);
+            // document.getElementById("confetti").style.display = 'block';
+            $('#confetti').show();
+            setTimeout(function () { 
+                document.getElementsByTagName('body')[0].removeChild(script);
+            $('#confetti').hide();
+            }, 3000);
+           
+
+        };
+            
+
+
+        $(function () {
+            countdown();
+        })
+
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles-confetti@2.10.1/tsparticles.confetti.bundle.min.js"></script>
+
+
+</body>
+
+</html>
